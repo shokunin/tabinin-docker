@@ -18,14 +18,16 @@ RUN             apt-get update && apt-get install -y git wget nodejs npm&& \
 		apt-get update && \
 		apt-get install -y erlang elixir && \
 		echo "Y" | /usr/local/bin/mix local.hex && \
-		echo "Y" | /usr/local/bin/mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez && \
-		cd / && git clone https://github.com/shokunin/tabinin.git && /bin/true
+		echo "Y" | /usr/local/bin/mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
 
-COPY		nomad.exs /tabinin/config/nomad.exs
 
-RUN		cd /tabinin && /usr/local/bin/mix deps.get && npm install && echo "Y" | mix compile
+RUN		cd / && git clone https://github.com/shokunin/tabinin.git tabinin-0.2 && /bin/true
+
+COPY		nomad.exs /tabinin-0.2/config/nomad.exs
+
+RUN		cd /tabinin-0.2 && git reset --hard origin/master && git checkout 0.2 && /usr/local/bin/mix deps.get && echo "Y" | mix compile && npm install
 
 EXPOSE          4000
 
-WORKDIR		/tabinin
+WORKDIR		/tabinin-0.2
 ENTRYPOINT      ["/usr/local/bin/mix", "phoenix.server"]
