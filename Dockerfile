@@ -21,13 +21,13 @@ RUN             apt-get update && apt-get install -y git wget nodejs npm&& \
 		echo "Y" | /usr/local/bin/mix archive.install https://github.com/phoenixframework/archives/raw/master/phoenix_new.ez
 
 
-RUN		cd / && git clone https://github.com/shokunin/tabinin.git tabinin-0.2 && /bin/true
+RUN		cd / && git clone https://github.com/shokunin/tabinin.git tabinin && /bin/true
 
-COPY		nomad.exs /tabinin-0.2/config/nomad.exs
+COPY		nomad.exs /tabinin/config/nomad.exs
 
-RUN		cd /tabinin-0.2 && git reset --hard origin/master && git checkout 0.2 && /usr/local/bin/mix deps.get && echo "Y" | mix compile && npm install
+RUN		cd /tabinin && git reset --hard origin/master && git pull && /usr/local/bin/mix deps.get && echo "Y" | mix compile && npm install
 
 EXPOSE          4000
 
-WORKDIR		/tabinin-0.2
+WORKDIR		/tabinin
 ENTRYPOINT      ["/usr/local/bin/mix", "phoenix.server"]
